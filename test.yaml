@@ -1,0 +1,54 @@
+# YAML ini file for the script generator
+---
+:input_parameter:
+  :prorgam_to_execute: "/Applications/AtomicParsley/AtomicParsley"
+  :input_file_mask: "*.m4v"
+  :output_path: "/Volumes/WD/temp"
+  :film_name_pos: 1
+  :track_number_len: 5    #length
+  :track_number_pos: 7    #statring position of track number in the filename
+  :track_number_len: 2    #length
+  :season_number_pos: 10
+  :season_number_len: 2
+   
+:option_name:
+  :artist: --artist
+  :title: --title
+  :album: --album
+  :genre: --genre
+  :tracknum: --tracknum
+  :disk: --disk
+  :comment: --comment
+  :year: --year
+  :lyrics: --lyrics
+  :composer: --composer
+  :copyright: --copyright
+  :grouping: --grouping
+  :artwork: --artwork
+  :bpm: --bpm
+  :albumartist: --albumArtist
+  :compilation: --compilation
+  :advisory: --advisory
+  :stik: --stik
+  :description: --description
+  :tvnetwork: --TVNetwork
+  :tvshowname: --TVShowName
+  :tvepisode: --TVEpisode
+  :tvseasonnum: --TVSeasonNum
+  :tvepisodenum: --TVEpisodeNum
+  :podcastflag: --podcastFlag
+  :category: --category
+  :keyword: --keyword
+  :podcasturl: --podcastURL
+  :podcastguid: --podcastGUID
+  :purchasedate: --purchaseDate
+  :encodingtool: --encodingTool
+  :gapless: --gapless
+    
+:option_value:
+  :artist: Artist
+  :title: Title
+  :album: fdsfsdf
+  :genre: Fun
+  :tracknum: 1/12	                
+  :disk: 1/12	                    

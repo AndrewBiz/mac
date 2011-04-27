@@ -1,0 +1,83 @@
+# YAML ini file for the script generator
+---
+:input_parameter:
+  :prorgam_to_execute: "/Applications/AtomicParsley/AtomicParsley"
+  :input_file_mask: "*.m4v"
+  :output_path: "/Volumes/WD/temp"
+  :film_name_pos: 1       #statring position of name in the filename
+  :track_number_len: 5    #length
+  :track_number_pos: 7    #statring position of track number in the filename
+  :track_number_len: 2    #length
+  :season_number_pos: 10
+  :season_number_len: 2
+   
+:option_name:
+  :artist: --artist
+  :title: --title
+  :album: --album
+  :genre: --genre
+  :tracknum: --tracknum
+  :disk: --disk
+  :comment: --comment
+  :year: --year
+  :lyrics: --lyrics
+  :composer: --composer
+  :copyright: --copyright
+  :grouping: --grouping
+  :artwork: --artwork
+  :bpm: --bpm
+  :albumartist: --albumArtist
+  :compilation: --compilation
+  :advisory: --advisory
+  :stik: --stik
+  :description: --description
+  :tvnetwork: --TVNetwork
+  :tvshowname: --TVShowName
+  :tvepisode: --TVEpisode
+  :tvseasonnum: --TVSeasonNum
+  :tvepisodenum: --TVEpisodeNum
+  :podcastflag: --podcastFlag
+  :category: --category
+  :keyword: --keyword
+  :podcasturl: --podcastURL
+  :podcastguid: --podcastGUID
+  :purchasedate: --purchaseDate
+  :encodingtool: --encodingTool
+  :gapless: --gapless
+    
+:optionls_value:
+  :artist: "Artist"               #--artist (str) Set the artist tag: "moov.udta.meta.ilst.©ART.data"
+  :title: "Title"                 #--title (str) Set the title tag: "moov.udta.meta.ilst.©nam.data"
+  :album: "Albumetz"              #--album (str) Set the album tag: "moov.udta.meta.ilst.©alb.data"    	
+  :genre: "Fun"                   #--genre (str) Set the genre tag: "©gen" (custom) or "gnre" (standard).
+  :tracknum: 1/12	                #--tracknum (num)[/tot]  Set the track number (or track number & total tracks).
+  :disk: 1/12	                    #--disk (num)[/tot]  Set the disk number (or disk number & total disks).
+  :comment: ""                    #--comment (str)    Set the comment tag: "moov.udta.meta.ilst.©cmt.data"
+  :year: 1992                     #--year (num|UTC)    Set the year tag: "moov.udta.meta.ilst.©day.data" 
+    #set with UTC "2006-09-11T09:00:00Z" for Release Date
+  :lyrics: ""                     #--lyrics (str)    Set the lyrics tag: "moov.udta.meta.ilst.©lyr.data"
+  :composer: "Composer"           #--composer (str)    Set the composer tag: "moov.udta.meta.ilst.©wrt.data"    
+  :copyright: "anb"               #--copyright (str)    Set the copyright tag: "moov.udta.meta.ilst.cprt.data"
+  :grouping: ""                   #--grouping (str)    Set the grouping tag: "moov.udta.meta.ilst.©grp.data"
+  :artwork: "aaa.jpg"	            #--artwork (/path)  Set a piece of artwork (jpeg or png) on "covr.data"    
+  :bpm: 0                         #--bpm (num)    Set the tempo/bpm tag: "moov.udta.meta.ilst.tmpo.data"
+  :albumartist: "AlbumArtist"     #--albumArtist (str)    Set the album artist tag: "moov.udta.meta.ilst.aART.data"
+  :compilation: false             #--compilation (bool)   Sets the "cpil" atom (true or false to delete the atom)
+  :advisory: "clean"  	        #--advisory (1of3)   Sets the iTunes lyrics advisory ('remove', 'clean', 'explicit')
+  :stik: value=(23)		        #--stik (1of7)   Sets the iTunes "stik" atom (--stik "remove" to delete) e.g. value=(num)
+    # (0)Movie (1)Normal (2)Audiobook  (5)Whacked Bookmark (6)Music Video (9)Short Film (10)TV Show (11)Booklet (23)iTunes U 
+  :description: "Description"     #--description (str)    Sets the description on the "desc" atom
+  :tvnetwork: "ANB"	            #--TVNetwork (str)    Sets the TV Network name on the "tvnn" atom
+  :tvshowname: "TV Show"          #--TVShowName (str)    Sets the TV Show name on the "tvsh" atom    
+  :tvepisode: "TV Episode"        #--TVEpisode (str)    Sets the TV Episode on "tven":"209", but its a string: "209 Part 1"   
+  :tvseasonnum: 1                 #--TVSeasonNum (num)    Sets the TV Season number on the "tvsn" atom
+  :tvepisodenum: 1                #--TVEpisodeNum (num)    Sets the TV Episode number on the "tves" atom
+  :podcastflag: false             #--podcastFlag (bool)   Sets the podcast flag (values are "true" or "false")
+  :category: "category"           #--category (str)    Sets the podcast category; typically a duplicate of its genre e.g. Education       	
+  :keyword: ""                    #--keyword (str)    Sets the podcast keyword; invisible to MacOSX Spotlight
+  :podcasturl: ""                 #--podcastURL (URL)    Set the podcast feed URL on the "purl" atom
+  :podcastguid: ""                #--podcastGUID (URL)    Set the episode's URL tag on the "egid" atom
+  :purchasedate: ""               #--purchaseDate (UTC)    Set Universal Coordinated Time of purchase on a "purd" atom
+  :encodingtool: ""               #--encodingTool (str)    Set the name of the encoder on the "©too" atom
+  :gapless: false                 #--gapless (bool)   Sets the gapless playback flag for a track in a gapless album
+       

@@ -1,0 +1,5 @@
+#!/bin/bash
+#the hardcoded location of the AtomicParsley binary
+AP_bin="/Applications/AtomicParsley/AtomicParsley"
+echo $1
+$AP_bin "$1" -t
