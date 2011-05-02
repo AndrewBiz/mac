@@ -23,6 +23,7 @@ else
   puts "File #{yaml_name} is not a file ..."
   exit
 end
+
 #Global checks
 output_path = input_parameter[:output_path]||"./temp/"
 if not File.exist?(output_path)
@@ -34,18 +35,19 @@ if not File.exists?(artwork)
   puts "Picture \'#{artwork}\' does not exist!"
   exit
 end
-
+track_number_pos = input_parameter[:track_number_pos].to_i
+track_number_len = input_parameter[:track_number_len].to_i
    
 
 # Generating bash script
 fext = input_parameter[:input_file_ext]||"mov"
 fmask = "*."+fext
-script_name = input_parameter[:script_name]||"script_ap.sh" 
+script_name = input_parameter[:script_name]||"script_ap.rb" 
 puts "MASK: #{fmask}, script: #{script_name}"
 
 program_to_execute = input_parameter[:program_to_execute]||"action"
-tvshowname = input_parameter[:tvshowname]
-tvseasonnum = input_parameter[:tvseasonnum]
+tvshowname = option_value[:tvshowname]
+tvseasonnum = option_value[:tvseasonnum]
 
 File.open(script_name, "w+") do |f|
   f.puts "#!/bin/bash"
@@ -68,7 +70,12 @@ File.open(script_name, "w+") do |f|
     current_command += " #{option_name[:albumartist]} \'#{tvshowname}\'"
     current_command += " #{option_name[:album]} \'#{tvshowname}, Season #{tvseasonnum}\'"
     # Episode num
-
+    tvepisodenum = movie_name[track_number_pos, track_number_len]
+    current_command += " #{option_name[:tvepisodenum]} \'#{tvepisodenum}\'"
+    current_command += " #{option_name[:tracknum]} \'#{tvepisodenum}\'"
+    episode_id = "S"+tvseasonnum.to_s.rjust(2,"0")+"E"+tvepisodenum   #SssEee format
+    current_command += " #{option_name[:tvepisode]} \'#{episode_id}\'"
+    
     f.puts current_command
   end
 end
