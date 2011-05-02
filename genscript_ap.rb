@@ -2,7 +2,7 @@
 require "yaml"
 
 # read input args
-yaml_name = ARGV[0]||"genscript_options.yaml"
+yaml_name = ARGV[0]||"genscript_ap_options.yaml"
 
 # read script_options
 if File.file?(yaml_name)
@@ -53,9 +53,15 @@ File.open(script_name, "w+") do |f|
   f.puts "#!/bin/bash"
   
   Dir.glob(fmask).each do |movie|
-    current_command = program_to_execute+" \'#{movie}\'"
-    #output
-    current_command += " --output \'#{output_path}#{File.basename(movie)}\'"
+    f.puts "#***"
+    #1st remove old metadata
+    f.puts "#*** Remove old metadata and pictures ***"
+    f.puts "echo \"*** PROCESSING  #{movie} - cleaning old tags\""
+    f.puts program_to_execute+" \'#{movie}\'"+" --output \'#{output_path}#{File.basename(movie)}\'"+" --artwork REMOVE_ALL --metaEnema"
+    #2nd update metadata
+    f.puts "#*** Update metadata and pictures ***"
+    f.puts "echo \"*** PROCESSING  #{movie} - adding new tags\""
+    current_command = program_to_execute+" \'#{output_path}#{File.basename(movie)}\' --overWrite"
     #processing options set by the user
     option_value.each do 
       |key, value|
