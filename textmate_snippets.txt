@@ -1,0 +1,11 @@
+Snippets!
+
+#!/usr/bin/env				Tab Trigger				!env
+
+Documentation for Word		Key Equivalent			⌃H
+Run Script					Key Equivalent			⌘R
+Open Terminal				Key Equivalent			⌃⇧O
+Make Script Executable		Key Equivalent			⌃⇧⌘X
+
+# encoding: UTF-8			Tab Trigger				utf8
+#!/usr/bin/env ruby -wKU	Tab Trigger				rb

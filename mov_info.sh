@@ -1,4 +1,5 @@
-#!/bin/bash
+#!/usr/bin/env bash
+
 #the hardcoded location of the AtomicParsley binary
 AP_bin="/Applications/AtomicParsley/AtomicParsley"
 

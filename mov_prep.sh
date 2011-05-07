@@ -1,4 +1,5 @@
 #!/bin/bash
+
 mov_getpic.sh $1
 echo "========================"
 AP_bin="/Applications/AtomicParsley/AtomicParsley"
