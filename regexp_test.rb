@@ -12,8 +12,7 @@ if m
   season = m[1]
   episode = m[2]
   episode_name = m[3]
-  
-  puts m.inspect
+  p(m)
 else
   puts 'NO!'
 end

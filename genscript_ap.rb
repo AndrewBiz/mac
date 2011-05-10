@@ -35,8 +35,8 @@ if not File.exists?(artwork)
   puts "Picture \'#{artwork}\' does not exist!"
   exit
 end
-track_number_pos = input_parameter[:track_number_pos].to_i
-track_number_len = input_parameter[:track_number_len].to_i
+#track_number_pos = input_parameter[:track_number_pos].to_i
+#track_number_len = input_parameter[:track_number_len].to_i
    
 
 # Generating bash script
@@ -47,7 +47,8 @@ puts "MASK: #{fmask}, script: #{script_name}"
 
 program_to_execute = input_parameter[:program_to_execute]||"action"
 tvshowname = option_value[:tvshowname]
-tvseasonnum = option_value[:tvseasonnum]
+
+# not used any more tvseasonnum = option_value[:tvseasonnum]
 
 File.open(script_name, "w+") do |f|
   f.puts "#!/bin/bash"
@@ -71,12 +72,23 @@ File.open(script_name, "w+") do |f|
     # Episode name
     movie_name = File.basename(movie, "."+fext)
     current_command += " #{option_name[:title]} \'#{movie_name}\'"
+    # Get season from filename. Expecting Snn format
+    if (/S(\d\d)/ =~ movie_name) then 
+      tvseasonnum = $1
+    else   
+      tvseasonnum = 1
+    end
     # TV Show series name
     current_command += " #{option_name[:artist]} \'#{tvshowname}\'"
     current_command += " #{option_name[:albumartist]} \'#{tvshowname}\'"
     current_command += " #{option_name[:album]} \'#{tvshowname}, Season #{tvseasonnum}\'"
-    # Episode num
-    tvepisodenum = movie_name[track_number_pos, track_number_len]
+    # Get Episode num from filename. Expecting En(nnn) format 
+    if (/E(\d{1,4})\s*/ =~ movie_name) then 
+      tvepisodenum = $1
+    else   
+      tvepisodenum = 1
+    end
+    #tvepisodenum = movie_name[track_number_pos, track_number_len]
     current_command += " #{option_name[:tvepisodenum]} \'#{tvepisodenum}\'"
     current_command += " #{option_name[:tracknum]} \'#{tvepisodenum}\'"
     episode_id = "S"+tvseasonnum.to_s.rjust(2,"0")+"E"+tvepisodenum   #SssEee format
