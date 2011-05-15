@@ -58,41 +58,42 @@ File.open(script_name, "w+") do |f|
     #1st remove old metadata
     f.puts "#*** Remove old metadata and pictures ***"
     f.puts "echo \"*** PROCESSING  #{movie} - cleaning old tags\""
-    f.puts program_to_execute+" \'#{movie}\'"+" --output \'#{output_path}#{File.basename(movie)}\'"+" --artwork REMOVE_ALL --metaEnema"
+    f.puts program_to_execute+" \"#{movie}\""+" --output \"#{output_path}#{File.basename(movie)}\""+" --artwork REMOVE_ALL --metaEnema"
     #2nd update metadata
     f.puts "#*** Update metadata and pictures ***"
     f.puts "echo \"*** PROCESSING  #{movie} - adding new tags\""
-    current_command = program_to_execute+" \'#{output_path}#{File.basename(movie)}\' --overWrite"
+    current_command = program_to_execute+" \"#{output_path}#{File.basename(movie)}\" --overWrite"
     #processing options set by the user
     option_value.each do 
       |key, value|
-      current_command += " #{option_name[key]} \'#{value}\'"
+      current_command += " #{option_name[key]} \"#{value}\""
     end
     # processibg 'auto' options
     # Episode name
     movie_name = File.basename(movie, "."+fext)
-    current_command += " #{option_name[:title]} \'#{movie_name}\'"
+    current_command += " #{option_name[:title]} \"#{movie_name}\""
     # Get season from filename. Expecting Snn format
     if (/S(\d\d)/ =~ movie_name) then 
       tvseasonnum = $1
     else   
       tvseasonnum = 1
     end
+    current_command += " #{option_name[:tvseasonnum]} \"#{tvseasonnum}\""
     # TV Show series name
-    current_command += " #{option_name[:artist]} \'#{tvshowname}\'"
-    current_command += " #{option_name[:albumartist]} \'#{tvshowname}\'"
-    current_command += " #{option_name[:album]} \'#{tvshowname}, Season #{tvseasonnum}\'"
+    current_command += " #{option_name[:artist]} \"#{tvshowname}\""
+    current_command += " #{option_name[:albumartist]} \"#{tvshowname}\""
+    current_command += " #{option_name[:album]} \"#{tvshowname}, Season #{tvseasonnum}\""
+    #tvepisodenum = movie_name[track_number_pos, track_number_len]
     # Get Episode num from filename. Expecting En(nnn) format 
-    if (/E(\d{1,4})\s*/ =~ movie_name) then 
+    if (/E(\d{1,4})\s*/ =~ movie_name)||(/(\d{4})\s*/ =~ movie_name) then 
       tvepisodenum = $1
     else   
       tvepisodenum = 1
     end
-    #tvepisodenum = movie_name[track_number_pos, track_number_len]
-    current_command += " #{option_name[:tvepisodenum]} \'#{tvepisodenum}\'"
-    current_command += " #{option_name[:tracknum]} \'#{tvepisodenum}\'"
+    current_command += " #{option_name[:tvepisodenum]} \"#{tvepisodenum}\""
+    current_command += " #{option_name[:tracknum]} \"#{tvepisodenum}\""
     episode_id = "S"+tvseasonnum.to_s.rjust(2,"0")+"E"+tvepisodenum   #SssEee format
-    current_command += " #{option_name[:tvepisode]} \'#{episode_id}\'"
+    current_command += " #{option_name[:tvepisode]} \"#{episode_id}\""
     
     f.puts current_command
   end
