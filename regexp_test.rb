@@ -22,10 +22,10 @@ puts new_file_name
 
 
 
-#m = /(?<foo>a+)b/.match("ccaaab")
-#puts m.inspect          #=> #<MatchData "aaab" foo:"aaa">
-#puts m["foo"]   #=> "aaa"
-#puts m[:foo]    #=> "aaa"
+m = /(?<foo>a+)b/.match("ccaaab")
+puts m.inspect          #=> #<MatchData "aaab" foo:"aaa">
+puts m["foo"]   #=> "aaa"
+puts m[:foo]    #=> "aaa"
 
 #m = /(.)(.)(\d+)(\d)/.match("THX1138: The Movie")
 #puts m.to_a               #=> ["HX1138", "H", "X", "113", "8"]

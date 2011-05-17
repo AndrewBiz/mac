@@ -44,4 +44,4 @@ else
 	subtitle_name1=$base.$srtlang1.srt
 fi
 
-$app -i "$video_name" -t 1 -c 1 -o "$output_video_name" -f mp4 -w 480 -e x264 -b 500 -a $audiostream -E faac -6 dpl2 -R Auto -B 96 -D 0.0 --srt-file "$subtitle_name1" --srt-codeset UTF-8 --srt-offset 0 --srt-lang $srtlang1 -x cabac=0:ref=2:me=umh:bframes=0:weightp=0:subq=6:8x8dct=0:trellis=0
+$app -i "$video_name" --no-dvdnav -t 1 -c 1 -o "$output_video_name" -f mp4 -w 480 -e x264 -b 500 -a $audiostream -E faac -6 dpl2 -R Auto -B 96 -D 0.0 --srt-file "$subtitle_name1" --srt-codeset UTF-8 --srt-offset 0 --srt-lang $srtlang1 -x cabac=0:ref=2:me=umh:bframes=0:weightp=0:subq=6:8x8dct=0:trellis=0
