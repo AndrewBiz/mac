@@ -1,0 +1,15 @@
+# YAML ini file for the script generator
+---
+:input_parameter:
+  :program_to_execute: "mv"
+  :mov_ext: [avi, mov, mkv] #movie extentions
+  :sbt_ext: [srt, idx]  #subtitle extentions
+  :script_name: "rename_movie.sh"
+#  :output_path: "/Volumes/WD/temp/"
+  :s_regexp: "(\d\d)x(?:\d\d).*\-\s*(?:.*)" #season
+  :e_regexp: "(?:\d\d)x(\d\d).*\-\s*(?:.*)" #episode
+  :n_regexp: "(?:\d\d)x(?:\d\d).*\-\s*(.*)" #name
+
+:output_parameter:
+  :file_prefix: "Friends." #
+  :subtitle_lang: "eng"
