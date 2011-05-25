@@ -35,7 +35,7 @@ def foreach_recursive(dir_to_process, fmask, &block)
   end
 end
 
-#Procedure
+#Classic Procedure
 def process_dir(dir_to_process, fmask)
   return until File.directory?(dir_to_process)
   # 1st process all files
@@ -56,7 +56,9 @@ def process_dir(dir_to_process, fmask)
 end
 
 # read input args
-yaml_name = ARGV[0]||"test_dir_options.yaml"
+
+dir_to_process = ARGV[0]||Dir.pwd
+yaml_name = ARGV[1]||File.join(dir_to_process, "test_dir_options.yaml")
 
 # read script_options
 if File.file?(yaml_name)
@@ -80,19 +82,26 @@ mov_ext = input_parameter[:mov_ext]
 sbt_ext = input_parameter[:sbt_ext]
 fmask = (mov_ext+sbt_ext).collect {|x| "*."+x}
 
+puts '**************************'
+puts "dir_to_process=#{dir_to_process}"
+puts '**************************'
+
 puts "!!! CLASSIC !!!"
-process_dir(Dir.pwd, fmask)
+process_dir(dir_to_process, fmask)
 
 puts
 puts "!!! VIA BLOCK !!!"
-each_file_from_here(Dir.pwd, fmask) {|dir, file| 
+each_file_from_here(dir_to_process, fmask) {|dir, file| 
   puts dir 
   puts file
 }
+
 puts
 puts "!!! VIA BLOCK 2!!!"
-foreach_recursive(Dir.pwd, fmask) {|dir, file| 
+foreach_recursive(dir_to_process, fmask) {|dir, file| 
   puts dir 
+  puts file.class
   puts file
+  puts File.expand_path(file)
 }
 
