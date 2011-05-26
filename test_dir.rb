@@ -20,17 +20,18 @@ def each_file_from_here(dir_to_process, fmask, &block)
 end
 
 #version 2
-def foreach_recursive(dir_to_process, fmask, &block)
-  Dir.foreach(dir_to_process) do |item|
-    if File.directory?(item)
-      if (item!=".") and (item!="..")
-        #Dir.chdir(item) {foreach_recursive(item, fmask, &block)}
-        foreach_recursive(item, fmask, &block)
+class Dir
+  def self.foreach_recursive(dir_to_process, fmask, &block)
+    Dir.foreach(dir_to_process) do |item|
+      if File.directory?(item)
+        if (item!=".") and (item!="..")
+          foreach_recursive(item, fmask, &block)
+        end
+      else #item=file
+        matched = false
+        fmask.collect{|x| matched = File.fnmatch(x, item)||matched}
+        yield File.expand_path(dir_to_process), item if matched 
       end
-    else #item=file
-      matched = false
-      fmask.collect{|x| matched = File.fnmatch(x, item)||matched}
-      yield File.expand_path(dir_to_process), item if matched 
     end
   end
 end
@@ -82,6 +83,7 @@ mov_ext = input_parameter[:mov_ext]
 sbt_ext = input_parameter[:sbt_ext]
 fmask = (mov_ext+sbt_ext).collect {|x| "*."+x}
 
+Dir.chdir(dir_to_process)
 puts '**************************'
 puts "dir_to_process=#{dir_to_process}"
 puts '**************************'
@@ -98,10 +100,7 @@ each_file_from_here(dir_to_process, fmask) {|dir, file|
 
 puts
 puts "!!! VIA BLOCK 2!!!"
-foreach_recursive(dir_to_process, fmask) {|dir, file| 
-  puts dir 
-  puts file.class
-  puts file
-  puts File.expand_path(file)
+Dir.foreach_recursive(dir_to_process, fmask) {|dir, file| 
+  puts File.join(dir,file)
 }
 
