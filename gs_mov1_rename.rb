@@ -1,8 +1,8 @@
-#!/usr/bin/ruby
+#!/usr/bin/env ruby -w
 require "yaml"
 
 # read input args
-yaml_name = ARGV[0]||"genscript_rename_mov_options.yaml"
+yaml_name = ARGV[0]||"gs_mov1_rename_options.yaml"
 
 # read script_options
 if File.file?(yaml_name)
@@ -21,29 +21,25 @@ else
   exit
 end
 
-#Global checks
-=begin
-output_path = input_parameter[:output_path]||"./temp/"
-if not File.exist?(output_path)
-  puts "Output dir \'#{output_path}\' does not exist!"
-  exit
-end
-=end
-
 # Generating bash script
 # get array of file exts to be processed
 mov_ext = input_parameter[:mov_ext]
 sbt_ext = input_parameter[:sbt_ext]
 fmask = (mov_ext+sbt_ext).collect {|x| "*."+x}
 # get script name
-script_name = input_parameter[:script_name]||"script_rename.rb" 
+script_name = input_parameter[:script_name]||"1_ren_movie.rb" 
+output_path = input_parameter[:output_path]||"." 
+
+if not File.exists?(output_path)
+  Dir.mkdir(output_path)
+end
+
 puts "MASK: #{fmask.inspect}, script: #{script_name}"
 #  
 program_to_execute = input_parameter[:program_to_execute]||"action"
 # regexps 
-s_regexp = input_parameter[:s_regexp]||""
-e_regexp = input_parameter[:e_regexp]||""
-n_regexp = input_parameter[:n_regexp]||""
+mov_regexp = input_parameter[:mov_regexp]||""
+srt_regexp = input_parameter[:srt_regexp]||""
 #
 file_prefix = output_parameter[:file_prefix]
 #
@@ -54,42 +50,41 @@ File.open(script_name, "w+") do |f|
   f.puts "#!/bin/bash"
   Dir.glob(fmask).each do |file|
     f.puts "#***"
-    new_file_name = ""
+    new_file_name = "#{output_path}/"
     new_file_name += file_prefix
     # get the actual extention
     if (/\.(.*)$/ =~ file) then file_ext = $1 end
     # get the actual name w/o extention
     file_name = File.basename(file, "."+file_ext)
-    #getting season
-    if (s_regexp > "") then
-      m = Regexp.new(s_regexp).match(file_name)
-      if m 
-        new_file_name += "S"+m[1] 
-      else
-        puts "#{file}: Season not found"
-      end
-    end
-    #getting episode
-    if (e_regexp > "") then
-      m = Regexp.new(e_regexp).match(file_name)
-      if m 
-        new_file_name += "E"+m[1] 
-      else
-        puts "#{file}: Episode not found"
-      end
-    end
-    #getting episode name
-    if (n_regexp > "") then
-      m = Regexp.new(n_regexp).match(file_name)
-      if m 
-        new_file_name += " "+m[1] 
-      else
-        puts "#{file}: Episode Name not found"
-      end
-    end
-    #for subtitle - adding lang
+
     if sbt_ext.include?(file_ext)
-      new_file_name += "."+subtitle_lang 
+      #subtitle
+      #getting season episode and name
+      if (srt_regexp > "") then
+        m = Regexp.new(srt_regexp).match(file_name)
+        if m
+          if(m[:season]) then new_file_name += "S"+m[:season] end
+          if(m[:episode]) then new_file_name += "E"+m[:episode] end
+          if(m[:name]) then new_file_name += " "+m[:name] end
+        else
+          puts "#{file}: Season or Episode or Name not found"
+        end
+      end
+      new_file_name += "."+subtitle_lang
+    else 
+      #movie
+      #getting season episode and name
+      if (mov_regexp > "") then
+        m = Regexp.new(mov_regexp).match(file_name)
+        if m 
+          if(m[:season]) then new_file_name += "S"+m[:season] end
+          if(m[:episode]) then new_file_name += "E"+m[:episode] end
+          if(m[:name]) then new_file_name += " "+m[:name] end
+        else
+          puts "#{file}: Season or Episode or Name not found"
+        end
+      end
+       
     end
     # add ext
     new_file_name += "."+file_ext 

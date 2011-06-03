@@ -3,12 +3,11 @@
 :input_parameter:
   :program_to_execute: "mv"
   :mov_ext: [avi, mov, mkv] #movie extentions
-  :sbt_ext: [srt, idx]  #subtitle extentions
-  :script_name: "rename_movie.sh"
-#  :output_path: "/Volumes/WD/temp/"
-  :s_regexp: "(\d\d)x(?:\d\d).*\-\s*(?:.*)" #season
-  :e_regexp: "(?:\d\d)x(\d\d).*\-\s*(?:.*)" #episode
-  :n_regexp: "(?:\d\d)x(?:\d\d).*\-\s*(.*)" #name
+  :sbt_ext: [srt, idx]  #subtitle extention
+  :script_name: "1_ren_movie.sh"
+  :output_path: "/Volumes/WD/mov/1_renamed"
+  :mov_regexp: "(?<season>\\d\\d)x(?<episode>\\d\\d).*\\-\\s*(?<name>.*)" #movie
+  :srt_regexp: "(?<season>\\d\\d)x(?<episode>\\d\\d).*\\-\\s*(?<name>.*)" #subtitle
 
 :output_parameter:
   :file_prefix: "Friends." #

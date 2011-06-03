@@ -20,12 +20,31 @@ end
 new_file_name = "Friends.S"+season+"E"+episode+" "+episode_name
 puts new_file_name
 
+film = "06x24 - The One With The Proposal Part 1 & 2.avi"
+m = /(?<season>\d\d)x(?<episode>\d\d).*\-\s*(?<name>.*)/.match(film)
+puts m[:season]
+puts m[:episode]
+puts m[:name]
 
+ddd = '(\d\d)x(\d\d).*\-\s*(.*)'
+m = /#{ddd}/.match(film)
+puts m[1]
+puts m[2]
+puts m[3]
 
-m = /(?<foo>a+)b/.match("ccaaab")
-puts m.inspect          #=> #<MatchData "aaab" foo:"aaa">
-puts m["foo"]   #=> "aaa"
-puts m[:foo]    #=> "aaa"
+fff = "(?<season>\\d\\d)x(?<episode>\\d\\d).*\\-\\s*(?<name>.*)"
+puts "===#{fff}==="
+m = /#{fff}/.match(film)
+puts m[:season]
+puts m[:episode]
+puts m[:name]
+
+rrr = '(?<season>\d\d)x(?<episode>\d\d).*\-\s*(?<name>.*)'
+puts rrr
+m = Regexp.new(rrr).match(film)
+puts m[:season]
+puts m[:episode]
+puts m[:name]
 
 #m = /(.)(.)(\d+)(\d)/.match("THX1138: The Movie")
 #puts m.to_a               #=> ["HX1138", "H", "X", "113", "8"]

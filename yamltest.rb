@@ -1,4 +1,4 @@
-#!/usr/bin/ruby
+#!/usr/bin/env ruby -w
 require "yaml"
 
 a = {:par1 => 'val1', :par2 => 'val2', :par3 => 'val3'}
