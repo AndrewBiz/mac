@@ -3,7 +3,7 @@ echo "******************************"
 echo "Script using HandBrake ANB (c)"
 echo "******************************"
 E_NOARGS=65
-app="/Applications/HandBrakeCLI"
+app="/Applications/video/HandBrakeCLI"
 #outdir="/Volumes/WD/temp"
 outdir="/temp_vid"
 # check args

@@ -5,10 +5,10 @@
   :mov_ext: [avi, mov, mkv] #movie extentions
   :sbt_ext: [srt, idx]  #subtitle extention
   :script_name: "1_ren_movie.sh"
-  :output_path: "/Volumes/WD/mov/1_renamed/!!!"
-  :mov_regexp: '(?<season>\d\d)x(?<episode>\d\d).*\-\s*(?<name>.*)' #movie
+  :output_path: "/Volumes/WD/mov/1_renamed/MSQLET"
+  :mov_regexp: '(?<episode1>\d\d)_(?<episode2>\d\d)_(?<name>.*)' #movie
   :srt_regexp: '(?<season>\d\d)x(?<episode>\d\d).*\-\s*(?<name>.*)' #subtitle
 
 :output_parameter:
-  :file_prefix: "Friends." #
+  :file_prefix: "MSQLET " #
   :subtitle_lang: "eng"

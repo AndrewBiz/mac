@@ -1,7 +1,7 @@
 # YAML ini file for the script generator
 ---
 :input_parameter:
-  :program_to_execute: "/Applications/AtomicParsley/AtomicParsley"
+  :program_to_execute: "/Applications/video/AtomicParsley/AtomicParsley"
   :input_file_ext: "m4v"
   :script_name: "3_tag_movie.sh"
   :output_path: "/Volumes/WD/mov/3_tagged/???"

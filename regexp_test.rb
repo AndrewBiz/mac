@@ -39,12 +39,17 @@ puts m[:season]
 puts m[:episode]
 puts m[:name]
 
-rrr = '(?<season>\d\d)x(?<episode>\d\d).*\-\s*(?<name>.*)'
+rrr = '(?<season>\d\d)x(?<season2>\d\d).*\-\s*(?<season1>.*)'
 puts rrr
 m = Regexp.new(rrr).match(film)
-puts m[:season]
-puts m[:episode]
-puts m[:name]
+puts m.inspect
+n = m.names
+a_season = n.select {|v| v =~ /^season/}.sort
+puts a_season.inspect 
+season_final = ""
+a_season.each {|x| season_final += m[x] }
+puts season_final
+
 
 #m = /(.)(.)(\d+)(\d)/.match("THX1138: The Movie")
 #puts m.to_a               #=> ["HX1138", "H", "X", "113", "8"]
