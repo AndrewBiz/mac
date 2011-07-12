@@ -7,10 +7,16 @@ app="/Applications/video/HandBrakeCLI"
 #outdir="/Volumes/WD/temp"
 outdir="/temp_vid"
 # check args
+if [ -z "$2" ] 
+then
+	outdir="/temp_vid"
+else
+	outdir=$2
+fi
 # input file name
 if [ -z "$1" ] 
 then
-  echo "Usage: `basename $0` video_file_name audio_stream sbtl_lang"
+  echo "Usage: `basename $0` video_file_name outdir audio_stream sbtl_lang"
   exit $E_NOARGS;
 else
 	fullpath=$1
@@ -27,20 +33,20 @@ else
 	output_video_name=$outdir/$base.m4v
 fi
 #audiostream
-if [ -z "$2" ]
-then
-  echo "Usage: `basename $0` video_file_name audio_stream sbtl_lang"
-  exit $E_NOARGS;
-else
-	audiostream=$2
-fi
-#srtlang1
 if [ -z "$3" ]
 then
-  echo "Usage: `basename $0` video_file_name audio_stream sbtl_lang"
+  echo "Usage: `basename $0` video_file_name outdir audio_stream sbtl_lang"
   exit $E_NOARGS;
 else
-	srtlang1=$3
+	audiostream=$3
+fi
+#srtlang1
+if [ -z "$4" ]
+then
+  echo "Usage: `basename $0` video_file_name outdir audio_stream sbtl_lang"
+  exit $E_NOARGS;
+else
+	srtlang1=$4
 	subtitle_name1=$base.$srtlang1.srt
 fi
 

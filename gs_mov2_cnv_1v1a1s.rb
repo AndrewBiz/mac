@@ -15,7 +15,7 @@ puts "MASK: #{fmask}, outdir: #{outdir}, script: #{script_name}, lang: #{lang}"
 
 File.open(script_name, "w+") do |f|
   Dir.glob(fmask).each do |movie|
-    f.puts "movcnv_1v1a1s.sh \"#{movie}\" #{astream} \"#{lang}\""
+    f.puts "movcnv_1v1a1s.sh \"#{movie}\" \"#{outdir}\" #{astream} \"#{lang}\""
   end
 end
 

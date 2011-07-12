@@ -1,0 +1,10 @@
+# YAML ini file for the script generator
+---
+:input_parameter:
+  :foto_ext: [jpg, jpeg, JPG] #foto extentions
+  :script_name: "1_foto_process.sh"
+  :output_path: "/Volumes/WD/foto/_processed_"
+
+:output_parameter:
+  :foto_author_aka: "ANB" #used in file name
+  :foto_author: "Andrey Bizyaev" #will be put into foto tag
