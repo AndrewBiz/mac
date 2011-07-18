@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby -w
 require "yaml"
-
+=begin
 class Dir
   def self.foreach_recursive(dir_to_process, fmask, &block)
     Dir.foreach(dir_to_process) do |item|
@@ -16,6 +16,7 @@ class Dir
     end
   end
 end
+=end
 
 # read input args
 yaml_name = ARGV[0]||"foto_process_options.yaml"
@@ -41,7 +42,7 @@ end
 
 # init
 foto_ext = input_parameter[:foto_ext]
-fmask = foto_ext.collect {|x| "*."+x}
+fmask = foto_ext.collect {|x| File.join("**", "*."+x)}
 
 script_name = input_parameter[:script_name]||"1_foto_process.rb" 
 
@@ -59,37 +60,42 @@ puts "DIR: #{dir_to_process} MASK: #{fmask.inspect}, script: #{script_name}"
 count = 0
 File.open(script_name, "w+") do |f|
   f.puts "#!/bin/bash"
-  Dir.foreach_recursive(dir_to_process, fmask) do |dir, file|
+#  Dir.foreach_recursive(dir_to_process, fmask) do |dir, file|
+  Dir.glob(fmask) do |file|
     print "*"
     count += 1
     f.puts "#*** #{count}"
-    full_file_name = File.join(dir, file)
+#    full_file_name = File.join(dir, file)
+    full_file_name = File.realpath(file)
     # get the actual extention
-    if (/\.(.*)$/ =~ file) then file_ext = $1 end
+    file_ext = File.extname(file)
+    #if (/\.(.*)$/ =~ file) then file_ext = $1 end
     # get the actual name w/o extention
-    file_name = File.basename(file, "."+file_ext)
-    #puts file_name
+    file_name = File.basename(file, file_ext)
+    #change flags
+    f.puts "chflags nouchg #{full_file_name}"
+    f.puts "chmod go=u-w #{full_file_name}" 
     
     if (/^(\d{8}-\d{4}-\w{3}_)(.*)/ =~ file_name) #check if file already renamed to YYYYMMDD-hhss-AUT format
       origin_file_name = $2
       #move - do not origin
-      new_file_name = File.join(output_path, file_name+"."+file_ext)
+      new_file_name = File.join(output_path, file_name+file_ext)
       f.puts "mv #{full_file_name} #{new_file_name}"   
       #puts new_file_name
     
     elsif (/^(\d{8}-\d{4}_)(.*)/ =~ file_name) # check if file already renamed in YYYYMMDD-hhss format 
       origin_file_name = $2
       #rename to origin
-      new_file_name = File.join(output_path, origin_file_name+"."+file_ext)
+      new_file_name = File.join(output_path, origin_file_name+file_ext)
       f.puts "mv #{full_file_name} #{new_file_name}"
       #puts new_file_name
     else
       # for all others names rename to origin
-      new_file_name = File.join(output_path, file_name+"."+file_ext)
+      new_file_name = File.join(output_path, file_name+file_ext)
       f.puts "mv #{full_file_name} #{new_file_name}"
       #puts new_file_name
     end
-  end  
+  end #glob 
   f.puts "#***GLOBAL PROCESSING***"
   f.puts "#***FILE RENAME***"
   f.puts "exiftool -if '$FileName !~ m/^([0-9]{8}-[0-9]{4})/' '-FileName<${DateTimeOriginal}-#{foto_author_aka}_%f.%le' -d %Y%m%d-%H%M '#{output_path}' -P"
