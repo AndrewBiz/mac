@@ -18,15 +18,15 @@ class Dir
 end
 
 # Parses the movie name and returnes Season, Episode, Name
-def parse_name(file_name, regexp_pattern)
-  m = Regexp.new(regexp_pattern).match(file_name)
-  if not m return nil
-  #if(m[:season]) then new_file_name += "S"+m[:season] end
-  #if(m[:episode]) then new_file_name += "E"+m[:episode] end
-  if(m[:episode1]) then new_file_name += m[:episode1] end
-  if(m[:episode2]) then new_file_name += m[:episode2] end
-  if(m[:name]) then new_file_name += " "+m[:name] end
-end
+#def parse_name(file_name, regexp_pattern)
+#  m = Regexp.new(regexp_pattern).match(file_name)
+#  if not m return nil
+#  #if(m[:season]) then new_file_name += "S"+m[:season] end
+#  #if(m[:episode]) then new_file_name += "E"+m[:episode] end
+#  if(m[:episode1]) then new_file_name += m[:episode1] end
+#  if(m[:episode2]) then new_file_name += m[:episode2] end
+#  if(m[:name]) then new_file_name += " "+m[:name] end
+#end
 
 # read input args
 yaml_name = ARGV[0]||"gs_mov1_rename_lynda_options.yaml"

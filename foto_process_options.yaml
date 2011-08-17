@@ -1,0 +1,10 @@
+# YAML ini file for the script generator
+---
+:input_parameter:
+  :foto_ext: [jpg, jpeg, JPG, orf, ORF, tif, tiff, TIF, TIFF] #foto extentions
+  :video_ext: [mov, MOV, 3gp, 3GP, m4v, M4V] #video extentions
+  :output_path: "/Volumes/WD/foto/_processed_/anb"
+
+:output_parameter:
+  :foto_author_aka: "ANB" #used in file name
+  :foto_author: "Andrey Bizyaev (aka ANB)" #will be put into foto tag
