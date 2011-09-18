@@ -3,6 +3,7 @@
 :input_parameter:
   :foto_ext: [jpg, jpeg, JPG, orf, ORF, tif, tiff, TIF, TIFF] #foto extentions
   :video_ext: [mov, MOV, 3gp, 3GP, m4v, M4V] #video extentions
+  :audio_ext: [wav, WAV, mp3, MP3] #audio files extentions
   :output_path: "/Volumes/WD/foto/_processed_/anb"
 
 :output_parameter:

@@ -96,7 +96,7 @@ File.open(script_name, "w+") do |f|
           #if(m[:season]) then new_file_name += "S"+m[:season] end
           #if(m[:episode]) then new_file_name += "E"+m[:episode] end
           if(m[:episode1]) then new_file_name += m[:episode1] end
-          if(m[:episode2]) then new_file_name += m[:episode2] end
+          #if(m[:episode2]) then new_file_name += m[:episode2] end
           if(m[:name]) then new_file_name += " "+m[:name] end
         else
           puts "#{file}: Season or Episode or Name not found"
@@ -112,7 +112,7 @@ File.open(script_name, "w+") do |f|
           #if(m[:season]) then new_file_name += "S"+m[:season] end
           #if(m[:episode]) then new_file_name += "E"+m[:episode] end
           if(m[:episode1]) then new_file_name += m[:episode1] end
-          if(m[:episode2]) then new_file_name += m[:episode2] end
+          #if(m[:episode2]) then new_file_name += m[:episode2] end
           if(m[:name]) then new_file_name += " "+m[:name] end
         else
           puts "#{file}: Season or Episode or Name not found"
