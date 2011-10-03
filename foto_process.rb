@@ -1,7 +1,9 @@
 #!/usr/bin/env ruby -w
 require "rubygems"
 require "yaml"
-require "mini_exiftool"
+require "mini_exiftool" # gem install mini_exiftool (http://miniexiftool.rubyforge.org/)
+require "logger"
+require "progressbar" #gem install progressbar (https://github.com/jfelchner/ruby-progressbar)
 
 def find_first_yaml_file(dir_to_process)
   Dir.chdir(dir_to_process)
@@ -14,15 +16,14 @@ def find_first_yaml_file(dir_to_process)
 end
 
 def read_input_params
+  begin
     # read input args
     dir_to_process = ARGV[0]||Dir.pwd
-    if not File.exist?(dir_to_process)
-      puts "#{dir_to_process} does not exist"
-      exit
+    if not File.exist?(dir_to_process) 
+      fail("#{dir_to_process} does not exist") #or raise
     end
     if not File.directory?(dir_to_process)
-      puts "#{dir_to_process} is not a Directory"
-      exit
+      fail("#{dir_to_process} is not a Directory")
     end
 
     yaml_name = ARGV[1]||find_first_yaml_file(dir_to_process)
@@ -31,14 +32,16 @@ def read_input_params
       begin
         options = YAML.load_file(yaml_name)
       rescue ArgumentError => e
-        puts "Could not parse YAML #{yaml_name}: #{e.message}"
-        exit
+        fail("Could not parse YAML #{yaml_name}: #{e.message}")
       end
     else
-      puts "File #{yaml_name} does not exist ..."
-      exit
+      fail("File #{yaml_name} does not exist ...")
     end
-    return [dir_to_process, options]
+  rescue => msg
+    puts msg; $log.fatal msg
+    exit false
+  end  
+  return [dir_to_process, options]
 end
 
 # Foto object
@@ -54,34 +57,48 @@ class FotoObject
   def self.scan dir_to_process=Dir.pwd, ext_to_process=["jpg"]
     @@collection.clear
     Dir.chdir(dir_to_process)
-    fmask = "**/*.{#{ext_to_process * ","}}"
+    fmask = "*.{#{ext_to_process * ","}}"
     puts
-    puts "Scanning #{ext_to_process} files"
-    puts "DIR: #{dir_to_process}, MASK: #{fmask}"
+    msg = "Scanning DIR: #{dir_to_process}, MASK: #{fmask}"; puts msg; $log.info msg
     
     Dir.glob(fmask) do |file|
       print "*"
-      self.new(file)
+      $log.info "Processing #{file}"
+      photo = self.new(file)
+puts photo.exif.FileName
+puts "DTO: #{photo.exif.DateTimeOriginal.strftime('%Y-%m-%d %H:%M')}"
+puts photo.exif.DateTimeOriginal
+puts photo.exif.FileModifyDate
     end #glob
     puts 
-    puts "TOTAL files scanned: #{self.collection.count}"    
+    msg = "TOTAL files scanned: #{self.collection.count}"; puts msg; $log.info msg
   end
   
   # Instance attributes and methods
   attr_reader :filename_original
-  attr_accessor :name, :extention, :directory, :errors
+  attr_accessor :name, :extention, :directory, :exif, :errors
   
   def initialize filename=nil
     @extention = File.extname filename
     @name = File.basename filename, extention
     @directory = File.expand_path(File.dirname(filename))
     @filename_original = File.realpath filename
+    begin 
+      @exif = MiniExiftool.new filename, :convert_encoding => true
+    rescue MiniExiftool::Error => e
+      msg = "MiniExiftool: #{e.message}"; puts msg; $log.fatal msg
+      exit false
+    end
     @@collection << self
   end
 end
 
 # MAIN PART
 # initializing
+$log = Logger.new("log.txt", 'daily')
+$log.level = Logger::DEBUG #DEBUG < INFO < WARN < ERROR < FATAL < UNKNOWN
+msg = "*** START command #{__FILE__} #{ARGV.inspect}"; puts msg; $log.info msg
+
 dir_to_process, options = read_input_params
 
 video_ext = options[:input_parameter][:video_ext]||["mov"]
@@ -96,7 +113,7 @@ output_path = options[:input_parameter][:output_path]||"."
 Dir.mkdir(output_path) unless File.exists?(output_path)
 
 FotoObject.scan(dir_to_process, options[:input_parameter][:foto_ext])
-p FotoObject.collection
+#p FotoObject.collection
 
 =begin
 begin 
@@ -149,7 +166,7 @@ end
     #puts new_file_name
   end
 =end
-
+=begin
 puts
 puts "Running on AUDIO"
 puts "DIR: #{dir_to_process} MASK: #{fmask_audio.inspect}"
@@ -230,5 +247,6 @@ puts "TOTAL files proceed: #{count_video}"
 #making the script executable
 #File.chmod(0775, script_name)
 
-# http://miniexiftool.rubyforge.org/
-# gem install mini_exiftool
+=end
+msg = "*** ENDING command #{__FILE__} #{ARGV.inspect}"; puts msg; $log.info msg
+$log.close
