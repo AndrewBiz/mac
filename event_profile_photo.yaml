@@ -1,22 +1,24 @@
 # Foto event profile
+# Attention! File code page should be UTF-8
 # Паспорт фотособытия
+# Внимание! Кодировка файла должна быть UTF-8
 
 # День рождения тестя празднуем скромно в квартире
 
 ---
 :input_parameter:
-  :foto_ext: [jpg, jpeg, JPG] #foto extentions
-  :event_date_start: "02.08.2011" #YYYY:mm:dd HH:MM:SS[.ss][+/-HH:MM]
-  :event_date_end: "02.08.2011" #YYYY:mm:dd HH:MM:SS[.ss][+/-HH:MM]
+  :foto_ext: [jpg, jpeg] #foto extentions
 
-:output_parameter:
-  :event_ru: "ДР тестя Москва"
-  :event_en: "Vladimir Smirnoff Birthday"
+:event:
+  :title_ru: "ДР тестя Москва"
+  :title_en: "Vladimir Smirnoff Birthday"
+  :date_start: "2010-07-05 00:00:00 +0400" #YYYY-mm-dd HH:MM:SS[.ss][+/-HH:MM]
+  :date_end: "2010-07-10 23:59:59 +0400" #YYYY-mm-dd HH:MM:SS[.ss][+/-HH:MM]
   :foto_author_aka: "ANB" #used in file name
   :foto_author: "Andrey Bizyaev (aka ANB)" #will be put into foto tag
 # Ключевые слова
   :character_set: UTF8 #IPTC CodedCharacterSet
-  :foto_keyword: "день рождения, москва, квартира смирновых" #XMP-dc:Subject (iPhoto Ok)
+  :foto_keyword: ["день рождения", "москва", "квартира смирновых"] #XMP-dc:Subject (iPhoto Ok)
 # Координаты места
   :gps_latitude: "55 37 25.37" #GPSLatitude=55 deg 37' 25.37"
   :gps_latitude_ref: N #'GPSLatitudeRef=N' = North 'S' = South
