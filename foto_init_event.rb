@@ -12,6 +12,9 @@ $DateTimeFormat = '%F %T %z'
 # *** Standard Ruby class - anb alter ***
 class Exception
   def full_message(info=nil)
+    "#{self.class}: #{info} #{message}"
+  end
+  def full_backtrace_message(info=nil)
     msg = "#{self.class}: #{info} #{message}"
     msg += ". Backtrace: #{backtrace.inspect}" if $log.debug?
     return  msg
@@ -22,9 +25,6 @@ end
 class Logger
   attr_reader :logdev
 end
-
-# *** Exception class ***
-class MyFatalError < StandardError; end
 
 # *** Read input params
 def read_input_params
@@ -54,7 +54,7 @@ def read_input_params
     begin
       options = YAML.load_file(yaml_name)
     rescue ArgumentError => e
-      fail(e.full_message("- Parsing YAML #{yaml_name} - "))
+      fail(e.full_message("- Parsing YAML #{yaml_name}; "))
     end
   else
     fail("YAML File #{yaml_name} does not exist ...")
@@ -62,8 +62,37 @@ def read_input_params
   return [dir_to_process, options]
 end
 
+# *** Foto event ***
+class FotoEvent
+  # *** Exception class ***
+  class FatalError < StandardError; end
+
+  # Instance attributes and methods
+  attr_accessor :title_ru, :title_en, :date_start, :date_end
+
+  def initialize options
+    # Event dates
+    $log.info "Initializing event dates"
+    begin 
+      @date_start = DateTime.strptime(options[:event][:date_start], $DateTimeFormat)
+    rescue Exception => e
+      raise FatalError, " - date_start parsing error;"
+    end
+    begin
+      @date_end = DateTime.strptime(options[:event][:date_end], $DateTimeFormat)
+    rescue Exception => e
+      raise FatalError, " - date_end parsing error;"
+    end
+    raise FatalError, "date_end must be >= date_begin" unless  @date_end >= @date_start 
+    $log.info "Event dates: #{@date_start.to_date}..#{@date_end.to_date}"
+  end
+
+end
+
 # *** Foto object ***
 class FotoObject
+  # *** Exception class ***
+  class Error < StandardError; end
 
   # Class attributes and methods
   @@collection = []
@@ -76,7 +105,7 @@ class FotoObject
     @@errors_occured
   end
   
-  def self.init_collection dir_to_process=Dir.pwd, ext_to_process=["jpg"]
+  def self.init_collection dir_to_process=Dir.pwd, ext_to_process=["jpg"], event
     @@collection.clear
     @@errors_occured = false
     Dir.chdir(dir_to_process)
@@ -91,7 +120,7 @@ class FotoObject
     pbar = ProgressBar.new("Initial scan", files2process)
     Dir.glob(fmask, File::FNM_CASEFOLD) do |file|
       $log.info "Processing #{file}"
-      photo = self.new(file)
+      photo = self.new(file, event)
       pbar.inc
     end #glob
     pbar.finish
@@ -102,7 +131,7 @@ class FotoObject
   attr_reader :filename_original
   attr_accessor :name, :extention, :directory, :date_time_original, :file_modify_date, :errors
   
-  def initialize filename=nil
+  def initialize filename=nil, event
     @errors = []
     @extention = File.extname filename
     @name = File.basename filename, extention
@@ -116,12 +145,20 @@ class FotoObject
       exif = MiniExiftool.new filename, :convert_encoding => true, :timestamps => DateTime
       @date_time_original = exif.date_time_original
       @file_modify_date = exif.file_modify_date
+
+      raise Error, "- date_time_original = NIL;" if @date_time_original == nil 
+      raise Error, "- date_time_original NOT in event dates;" unless (@date_time_original >= event.date_start) and (@date_time_original <= event.date_end) 
+
     rescue MiniExiftool::Error => e
-      $log.error e.full_message(@name)
+      $log.error e.full_message(@name+@extention)
+      @@errors_occured = true 
+      @errors << e.full_message
+    rescue Error => e
+      $log.error e.full_message(@name+@extention)
       @@errors_occured = true 
       @errors << e.full_message
     rescue Exception => e
-      $log.error e.full_message(@name)
+      $log.error e.full_message(@name+@extention)
       @@errors_occured = true 
       @errors << e.full_message
     end
@@ -133,65 +170,37 @@ end
 # ********** MAIN PROGRAM **********
 # initializing
 begin #*** GLOBAL BLOCK
-  $log = Logger.new(File.basename((__FILE__), File.extname(__FILE__))+".log", 'daily')
+  $log = Logger.new(File.basename((__FILE__), File.extname(__FILE__))+".log")
   $log.level = Logger::DEBUG #DEBUG < INFO < WARN < ERROR < FATAL < UNKNOWN
   $log.info "*** STARTING command #{__FILE__} #{ARGV.inspect}"
   $log.info "Current dir is #{Dir.pwd}"
 
   dir_to_process, options = read_input_params
 
-  # Event dates
-  begin
-    $event_date_start = DateTime.strptime(options[:event][:date_start], $DateTimeFormat)
-  rescue => raised_msg
-    msg = "Initializing $event_date_start: #{raised_msg}"; puts msg; $log.fatal msg
-    exit false
-  end
+  foto_event = FotoEvent.new options
 
-  begin
-    $event_date_end = DateTime.strptime(options[:event][:date_end], $DateTimeFormat)
-  rescue => raised_msg
-    msg = "Initializing $event_date_end: #{raised_msg}"; puts msg; $log.fatal msg
-    exit false
-  end
-    
+  FotoObject.init_collection(dir_to_process, options[:input_parameter][:foto_ext], foto_event)
 
-  begin
-    raise MyFatalError, '$event_date_end less than $event_date_begin' unless  $event_date_end >= $event_date_start 
-
-  rescue MyFatalError => e
-    puts e.full_message; 
-    $log.fatal e.full_message 
-    exit false
-
-  rescue RuntimeError => e  # or use $! instead
-    puts e.full_message; 
-    $log.fatal e.full_message 
-    fail
-  else
-    # All ok = No exceptions
-    msg = "Event dates: #{$event_date_start.to_date}..#{$event_date_end.to_date}"; puts msg; $log.info msg
-  end
-
-  FotoObject.init_collection(dir_to_process, options[:input_parameter][:foto_ext])
-
-    FotoObject.collection.each do |foto|
-puts
-      p foto
-puts
-      #print foto.name; puts foto.extention
+  FotoObject.collection.each do |foto|
+      print foto.name; puts foto.extention
+      p foto unless foto.errors.empty?
       #puts "DTO = #{foto.date_time_original}"
       #puts "FMD = #{foto.file_modify_date}"
 
     end
 
-rescue RuntimeError => e  # or use $! instead
-  $log.fatal e.full_message 
+rescue FotoEvent::FatalError => e
+  $log.fatal e.full_backtrace_message 
+  puts "Exit on FATAL errors. See #{$log.logdev.filename} for details"
+  exit false
+
+rescue RuntimeError => e
+  $log.fatal e.full_backtrace_message 
   puts "Exit on FATAL errors. See #{$log.logdev.filename} for details"
   exit false
 
 rescue Exception => e
-  $log.fatal e.full_message 
+  $log.fatal e.full_backtrace_message 
   puts "Exit on FATAL errors. See #{$log.logdev.filename} for details"
   exit false
 
